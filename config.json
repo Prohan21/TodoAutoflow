@@ -1,0 +1,485 @@
+{
+  "$product": {
+    "deployment_mode": "SOLO",
+    "name": "API AutoFlow",
+    "version": "2.2.6"
+  },
+  "DataGroup": [
+    {
+      "id": "<1605595210491878000.0.1768571349.193462277.162341>"
+    }
+  ],
+  "Flow": [
+    {
+      "default-test": "00addb88-aafc-4bef-8d98-ffc5ffa3fc2a",
+      "flow": [
+        {
+          "$action": "string/join",
+          "array": [
+            "INSERT INTO tododb.td (id, content) VALUES (",
+            {
+              "__$afref__": "data",
+              "path": [
+                "request",
+                "body",
+                "idp"
+              ]
+            },
+            ", \"",
+            {
+              "__$afref__": "data",
+              "path": [
+                "request",
+                "body",
+                "content"
+              ]
+            },
+            "\")"
+          ],
+          "output-location": {
+            "__$afref__": "data",
+            "path": [
+              "query"
+            ]
+          },
+          "separator": ""
+        },
+        {
+          "$action": "database/mariadb/query",
+          "$disabled": false,
+          "address": "127.0.0.1",
+          "database": "tododb",
+          "database-id": "",
+          "format": "processed",
+          "mock-result": {
+            "columns": [
+              "column1",
+              "column2"
+            ],
+            "num_rows": 2,
+            "rows": [
+              [
+                "col1_val1",
+                "col2_val1"
+              ],
+              [
+                "col1_val2",
+                "col2_val2"
+              ]
+            ]
+          },
+          "password": "password",
+          "port": 1001,
+          "query": {
+            "__$afref__": "data",
+            "path": [
+              "query"
+            ]
+          },
+          "ssl": false,
+          "type": "single execution",
+          "use-mock-result": false,
+          "username": "root"
+        },
+        {
+          "$action": "data/set",
+          "$disabled": true,
+          "at-location": {
+            "__$afref__": "data",
+            "path": [
+              "response",
+              "body"
+            ]
+          },
+          "value": "ok"
+        }
+      ],
+      "id": "046af2ff-e117-409d-97b8-ca7a3fd49523"
+    },
+    {
+      "default-test": "2fe2eea1-a2b6-4047-bd4b-2660eda921da",
+      "flow": [],
+      "id": "8bdaca99-bb03-40ca-8a84-6cdf966b2aad"
+    },
+    {
+      "default-test": "3ec9cd94-cd3a-47b7-a5bb-e03cc4f2157f",
+      "flow": [
+        {
+          "$action": "database/mariadb/query",
+          "$disabled": false,
+          "address": "127.0.0.1",
+          "database": "tododb",
+          "database-id": "",
+          "format": "processed",
+          "mock-result": {
+            "columns": [
+              "column1",
+              "column2"
+            ],
+            "num_rows": 2,
+            "rows": [
+              [
+                "col1_val1",
+                "col2_val1"
+              ],
+              [
+                "col1_val2",
+                "col2_val2"
+              ]
+            ]
+          },
+          "output-location": {
+            "__$afref__": "data",
+            "path": [
+              "response",
+              "body"
+            ]
+          },
+          "password": "password",
+          "port": 1001,
+          "query": "SELECT * FROM tododb.td;",
+          "ssl": false,
+          "type": "single execution",
+          "use-mock-result": false,
+          "username": "root"
+        },
+        {
+          "$action": "data/set",
+          "$disabled": true,
+          "at-location": {
+            "__$afref__": "data",
+            "path": [
+              "result"
+            ]
+          },
+          "value": [
+            null
+          ]
+        },
+        {
+          "$action": "iteration/for-each",
+          "$disabled": false,
+          "array": {
+            "__$afref__": "data",
+            "path": [
+              "response",
+              "body"
+            ]
+          },
+          "do": [
+            {
+              "$action": "string/split-at",
+              "$disabled": true,
+              "output-location": {
+                "__$afref__": "data",
+                "path": [
+                  "value",
+                  "content"
+                ]
+              },
+              "position": 0,
+              "string": {
+                "__$afref__": "data",
+                "path": [
+                  "value",
+                  "content"
+                ]
+              }
+            },
+            {
+              "$action": "array/insert-at",
+              "$disabled": true,
+              "array": {
+                "__$afref__": "data",
+                "path": [
+                  "result"
+                ]
+              },
+              "index": 0,
+              "output-location": {
+                "__$afref__": "data",
+                "path": [
+                  "result"
+                ]
+              },
+              "value": {
+                "__$afref__": "data",
+                "path": [
+                  "value",
+                  "content"
+                ]
+              }
+            }
+          ],
+          "index-location": {
+            "__$afref__": "data",
+            "path": [
+              "index"
+            ]
+          },
+          "value-location": {
+            "__$afref__": "data",
+            "path": [
+              "value"
+            ]
+          }
+        },
+        {
+          "$action": "data/set",
+          "$disabled": true,
+          "at-location": {
+            "__$afref__": "data",
+            "path": [
+              "response",
+              "body"
+            ]
+          },
+          "value": {
+            "__$afref__": "data",
+            "path": [
+              "result"
+            ]
+          }
+        }
+      ],
+      "id": "2e1d1950-0549-43fe-8ddb-e319d2e9a687"
+    },
+    {
+      "default-test": "04c8fafb-09b5-48e5-b3d7-be6266ee8e2c",
+      "flow": [
+        {
+          "$action": "string/join",
+          "array": [
+            "DELETE FROM tododb.td WHERE id=",
+            {
+              "__$afref__": "data",
+              "path": [
+                "request",
+                "body",
+                "idD"
+              ]
+            },
+            ";"
+          ],
+          "output-location": {
+            "__$afref__": "data",
+            "path": [
+              "query"
+            ]
+          },
+          "separator": ""
+        },
+        {
+          "$action": "database/mariadb/query",
+          "$disabled": false,
+          "address": "127.0.0.1",
+          "database": "tododb",
+          "database-id": "",
+          "format": "processed",
+          "mock-result": {
+            "columns": [
+              "column1",
+              "column2"
+            ],
+            "num_rows": 2,
+            "rows": [
+              [
+                "col1_val1",
+                "col2_val1"
+              ],
+              [
+                "col1_val2",
+                "col2_val2"
+              ]
+            ]
+          },
+          "output-location": {
+            "__$afref__": "data",
+            "path": [
+              null
+            ]
+          },
+          "password": "password",
+          "port": 1001,
+          "query": {
+            "__$afref__": "data",
+            "path": [
+              "query"
+            ]
+          },
+          "ssl": false,
+          "type": "single execution",
+          "use-mock-result": false,
+          "username": "root"
+        }
+      ],
+      "id": "1446c765-db6f-4261-81d4-2adb43d7137e"
+    }
+  ],
+  "Inbound": [
+    {
+      "access-control-allow-credentials": "*",
+      "access-control-allow-headers": "*",
+      "access-control-allow-methods": "*",
+      "access-control-allow-origin": "*",
+      "id": "dfe56091-be07-460e-b70a-7898bd8a01a7",
+      "log-requests": true,
+      "port": 3001,
+      "type": "http server"
+    }
+  ],
+  "InboundEndpoint": [
+    {
+      "decode-content": true,
+      "endpoint-type": "Basic",
+      "id": "b9c556c0-373b-48f9-8954-fdf238c910ed",
+      "methods": [
+        "POST"
+      ],
+      "path": "/",
+      "type": "endpoint"
+    },
+    {
+      "decode-content": true,
+      "endpoint-type": "Basic",
+      "id": "77649502-4322-4652-bd3e-b569a32531d1",
+      "methods": [
+        "PATCH"
+      ],
+      "path": "/",
+      "type": "endpoint"
+    },
+    {
+      "decode-content": true,
+      "endpoint-type": "Basic",
+      "id": "4e52193a-3a12-488c-9553-b2cc2c2f26fc",
+      "methods": [
+        "GET"
+      ],
+      "path": "/",
+      "type": "endpoint"
+    },
+    {
+      "decode-content": true,
+      "endpoint-type": "Basic",
+      "id": "b8f682e3-5255-48b8-ada9-fcd075c838ea",
+      "methods": [
+        "DELETE"
+      ],
+      "path": "/",
+      "type": "endpoint"
+    }
+  ],
+  "ResourceInfo": [
+    {
+      "id": "00addb88-aafc-4bef-8d98-ffc5ffa3fc2a",
+      "parentId": "046af2ff-e117-409d-97b8-ca7a3fd49523",
+      "resourceType": "Test",
+      "title": "default-test"
+    },
+    {
+      "id": "04c8fafb-09b5-48e5-b3d7-be6266ee8e2c",
+      "parentId": "1446c765-db6f-4261-81d4-2adb43d7137e",
+      "resourceType": "Test",
+      "title": "default-test"
+    },
+    {
+      "id": "b9c556c0-373b-48f9-8954-fdf238c910ed",
+      "parentId": "dfe56091-be07-460e-b70a-7898bd8a01a7",
+      "resourceType": "InboundEndpoint",
+      "title": "Post tasks"
+    },
+    {
+      "id": "046af2ff-e117-409d-97b8-ca7a3fd49523",
+      "parentId": "b9c556c0-373b-48f9-8954-fdf238c910ed",
+      "resourceType": "Flow"
+    },
+    {
+      "id": "77649502-4322-4652-bd3e-b569a32531d1",
+      "parentId": "dfe56091-be07-460e-b70a-7898bd8a01a7",
+      "resourceType": "InboundEndpoint",
+      "title": "PUT tasks"
+    },
+    {
+      "id": "8bdaca99-bb03-40ca-8a84-6cdf966b2aad",
+      "parentId": "77649502-4322-4652-bd3e-b569a32531d1",
+      "resourceType": "Flow"
+    },
+    {
+      "id": "4e52193a-3a12-488c-9553-b2cc2c2f26fc",
+      "parentId": "dfe56091-be07-460e-b70a-7898bd8a01a7",
+      "resourceType": "InboundEndpoint",
+      "title": "GET tasks"
+    },
+    {
+      "id": "b8f682e3-5255-48b8-ada9-fcd075c838ea",
+      "parentId": "dfe56091-be07-460e-b70a-7898bd8a01a7",
+      "resourceType": "InboundEndpoint",
+      "title": "DELETE tasks"
+    },
+    {
+      "id": "<1605595210491878000.0.1768571349.193462277.162341>",
+      "resourceType": "DataGroup",
+      "title": "content"
+    },
+    {
+      "id": "dfe56091-be07-460e-b70a-7898bd8a01a7",
+      "parentId": null,
+      "resourceType": "Inbound",
+      "title": "Todo"
+    },
+    {
+      "id": "2fe2eea1-a2b6-4047-bd4b-2660eda921da",
+      "parentId": "8bdaca99-bb03-40ca-8a84-6cdf966b2aad",
+      "resourceType": "Test",
+      "title": "default-test"
+    },
+    {
+      "id": "2e1d1950-0549-43fe-8ddb-e319d2e9a687",
+      "parentId": "4e52193a-3a12-488c-9553-b2cc2c2f26fc",
+      "resourceType": "Flow"
+    },
+    {
+      "id": "1446c765-db6f-4261-81d4-2adb43d7137e",
+      "parentId": "b8f682e3-5255-48b8-ada9-fcd075c838ea",
+      "resourceType": "Flow"
+    }
+  ],
+  "Test": [
+    {
+      "id": "00addb88-aafc-4bef-8d98-ffc5ffa3fc2a",
+      "value": {
+        "body": {
+          "content": null,
+          "idp": null
+        },
+        "header": {},
+        "path": {},
+        "path-string": "",
+        "query": {}
+      }
+    },
+    {
+      "id": "04c8fafb-09b5-48e5-b3d7-be6266ee8e2c",
+      "value": {
+        "body": {
+          "idD": null
+        },
+        "header": {},
+        "path": {},
+        "path-string": "",
+        "query": {}
+      }
+    },
+    {
+      "id": "2fe2eea1-a2b6-4047-bd4b-2660eda921da",
+      "value": {
+        "body": "",
+        "header": {},
+        "path": {},
+        "path-string": "",
+        "query": {}
+      }
+    }
+  ]
+}
