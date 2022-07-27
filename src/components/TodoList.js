@@ -29,13 +29,14 @@ function TodoList() {
 //   console.log("Starting Request", JSON.stringify(request, null, 2));
 //   return request;
 // });
-        axios.post('http://localhost:3001/',{body: {'idp':todo.id, 'content': todo.content}}).then((result)=>{console.log(result)})
+        axios.post('http://localhost:3001/',{'idp':todo.id, 'content': todo.content}).then((result)=>{console.log(result)})
         
         console.log(todos)
     }
     const removeTodo=id =>{
         const removeArr =[...todos].filter(todo=> todo.id !== id)
-        axios.delete('http://localhost:3001/',{body: {'idD':id}})
+        axios.delete('http://localhost:3001/',{data: {'idD':id}})
+        console.log("idD"+id)
         setTodos(removeArr)
 
     }
